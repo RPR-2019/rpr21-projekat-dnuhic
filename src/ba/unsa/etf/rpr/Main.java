@@ -17,7 +17,7 @@ public class Main extends Application {
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/fxml/login.fxml"));
         fxmlLoader.setController(logInController);
         Parent root = fxmlLoader.load();
-        Scene scene = new Scene(root, 500, 500);
+        Scene scene = new Scene(root, USE_COMPUTED_SIZE, USE_COMPUTED_SIZE);
         stage.setTitle("Log In");
         stage.setScene(scene);
         stage.show();

@@ -1,0 +1,38 @@
+.background {
+    -fx-background-color: #ffffff;
+    -fx-background-image: url('../images/test2.jpg');
+    -fx-background-repeat: no-repeat;
+    -fx-background-size: 100% 100%;
+    -fx-background-position: center center;
+    -fx-border-image-slice: 500;
+}
+
+.loginWindow {
+    -fx-background-color: #f3f3f3;
+}
+
+.button {
+    -fx-background-radius: 0;
+    -fx-accent: #f3f3f3;
+    -fx-focus-color: #f3f3f3;
+}
+
+.text-field, password-field {
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: right center;
+    -fx-background-size: 18;
+    -fx-border-width: 0 0 1px 0;
+    -fx-background-color: #f3f3f3;
+    -fx-background-insets: 0, 0 0 1 0 ;
+    -fx-background-radius: 0;
+    -fx-padding: 0;
+    -fx-border-color: -fx-background -fx-background -fx-text-box-border -fx-background;
+}
+
+.text-field {
+    -fx-background-image: url("../images/mail-142.png");
+}
+
+.password-field {
+    -fx-background-image: url("../images/padlock-11723.png");
+}
