@@ -1,0 +1,7 @@
+.button {
+    -fx-background-radius: 0;
+}
+
+.button:focused {
+    -fx-background-radius: 0;
+}
