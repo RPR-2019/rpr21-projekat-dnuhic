@@ -48,33 +48,36 @@ public class LogInController {
     public void loginButtonClick(ActionEvent actionEvent) {
         if(emailField.getText().matches(emailFormat) && passwordField.getText().length() >= 8) {
             try {
-                Person person = dao.login(emailField.getText(), passwordField.getText());
-                Stage stage = ((Stage) ((Node) actionEvent.getSource()).getScene().getWindow());
-                FXMLLoader fxmlLoader;
-                Scene scene;
-                if(person.isAdmin()) {
-                    AdminController adminController = new AdminController();
-                    fxmlLoader = new FXMLLoader(getClass().getResource("/fxml/admin.fxml"));
-                    fxmlLoader.setController(adminController);
-                    stage.setTitle("Log In");
-                } else {
-                    MainPageLoggedInController mainPageLoggedInController = new MainPageLoggedInController();
-                    fxmlLoader = new FXMLLoader(getClass().getResource("/fxml/mainPageLoggedIn.fxml"));
-                    fxmlLoader.setController(mainPageLoggedInController);
-                    stage.setTitle("Log In");
+                try {
+                    Person person = dao.login(emailField.getText(), passwordField.getText());
+                    Stage stage = ((Stage) ((Node) actionEvent.getSource()).getScene().getWindow());
+                    FXMLLoader fxmlLoader;
+                    Scene scene;
+                    if (person.isAdmin()) {
+                        AdminController adminController = new AdminController();
+                        fxmlLoader = new FXMLLoader(getClass().getResource("/fxml/admin.fxml"));
+                        fxmlLoader.setController(adminController);
+                        stage.setTitle("Log In");
+                    } else {
+                        MainPageLoggedInController mainPageLoggedInController = new MainPageLoggedInController();
+                        fxmlLoader = new FXMLLoader(getClass().getResource("/fxml/mainPageLoggedIn.fxml"));
+                        fxmlLoader.setController(mainPageLoggedInController);
+                        stage.setTitle("Log In");
+                    }
+                    Parent root = null;
+                    root = fxmlLoader.load();
+                    scene = new Scene(root, stage.getScene().getWidth(), stage.getScene().getHeight());
+                    stage.setScene(scene);
+                    stage.show();
+                } catch (IOException e) {
+                    e.printStackTrace();
                 }
-                Parent root = fxmlLoader.load();
-                scene = new Scene(root, stage.getScene().getWidth(), stage.getScene().getHeight());
-                stage.setScene(scene);
-                stage.show();
             } catch (IncorrectEmailOrPasswordException e) {
-                if(!((outerVBox.getChildren().get(outerVBox.getChildren().size()-2)) instanceof Label)) {
+                if (!((outerVBox.getChildren().get(outerVBox.getChildren().size() - 2)) instanceof Label)) {
                     Label label = new Label(e.getMessage());
                     label.setStyle("-fx-text-fill: #ff3232");
                     outerVBox.getChildren().add(outerVBox.getChildren().size() - 1, label);
                 }
-            } catch (IOException e) {
-                e.printStackTrace();
             }
         }
     }

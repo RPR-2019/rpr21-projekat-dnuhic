@@ -78,13 +78,14 @@ public class InspectorDao {
     public List<Person> getAllInspectors() {
         ArrayList<Person> lista = new ArrayList<Person>();
         try {
-            ResultSet set =  getAllInspectors.executeQuery();
+            ResultSet set =  getAllPersons.executeQuery();
             while(set.next()) {
-                lista.add(new Person(set.getInt(1), set.getString(2), set.getString(3), set.getString(4), set.getString(5)));
+                lista.add(new Person(set.getInt(1), set.getString(2), set.getString(3), set.getString(4), set.getString(5), set.getInt(6)));
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        System.out.println(lista.size());
         return lista;
     }
 
