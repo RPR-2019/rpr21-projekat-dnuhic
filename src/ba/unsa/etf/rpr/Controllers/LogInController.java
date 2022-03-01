@@ -1,16 +1,29 @@
 package ba.unsa.etf.rpr.Controllers;
 
+import ba.unsa.etf.rpr.Dao.InspectorDao;
+import ba.unsa.etf.rpr.IncorrectEmailOrPasswordException;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
+
+import java.io.IOException;
 
 public class LogInController {
+    public VBox outerVBox;
     public TextField emailField;
     public PasswordField passwordField;
     public String emailFormat = "^[_A-Za-z0-9-+]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
     public Label test;
+
+    private InspectorDao dao = InspectorDao.getInstance();
 
     @FXML
     public void initialize() {
@@ -32,6 +45,30 @@ public class LogInController {
     }
 
     public void loginButtonClick(ActionEvent actionEvent) {
-        System.out.println("radi");
+        if(emailField.getText().matches(emailFormat) && passwordField.getText().length() >= 8) {
+            try {
+                dao.login(emailField.getText(), passwordField.getText());
+                try {
+                    Stage stage = ((Stage) ((Node) actionEvent.getSource()).getScene().getWindow());
+                    MainPageLoggedInController mainPageLoggedInController = new MainPageLoggedInController();
+                    FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/fxml/mainPageLoggedIn.fxml"));
+                    fxmlLoader.setController(mainPageLoggedInController);
+                    Parent root = null;
+                    root = fxmlLoader.load();
+                    Scene scene = new Scene(root, stage.getScene().getWidth(), stage.getScene().getHeight());
+                    stage.setTitle("Log In");
+                    stage.setScene(scene);
+                    stage.show();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            } catch (IncorrectEmailOrPasswordException e) {
+                if(!((outerVBox.getChildren().get(outerVBox.getChildren().size()-2)) instanceof Label)) {
+                    Label label = new Label(e.getMessage());
+                    label.setStyle("-fx-text-fill: #ff3232");
+                    outerVBox.getChildren().add(outerVBox.getChildren().size() - 1, label);
+                }
+            }
+        }
     }
 }

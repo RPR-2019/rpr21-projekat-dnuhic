@@ -10,6 +10,7 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 
+import static com.sun.glass.ui.Window.State.MAXIMIZED;
 import static javafx.scene.layout.Region.USE_COMPUTED_SIZE;
 
 public class Main extends Application {
@@ -23,6 +24,7 @@ public class Main extends Application {
         stage.setTitle("Log In");
         stage.setScene(scene);
         stage.show();
+        stage.setMaximized(true);
     }
 
     public static void main(String[] args) {

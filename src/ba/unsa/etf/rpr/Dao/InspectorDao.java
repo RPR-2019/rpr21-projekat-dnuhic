@@ -1,5 +1,6 @@
 package ba.unsa.etf.rpr.Dao;
 
+import ba.unsa.etf.rpr.IncorrectEmailOrPasswordException;
 import ba.unsa.etf.rpr.Models.Person;
 
 import java.io.FileInputStream;
@@ -12,7 +13,8 @@ import java.util.Scanner;
 public class InspectorDao {
     private static InspectorDao instance;
     private Connection conn;
-    private PreparedStatement getAllPersons;
+    private PreparedStatement getAllPersons, findUserByMail;
+    private Person loggedUser = null;
 
 
     public static InspectorDao getInstance() {
@@ -45,7 +47,8 @@ public class InspectorDao {
     }
 
     private void createQueries() throws SQLException {
-        getAllPersons = conn.prepareStatement("SELECT p.id, p.name, p.surname, p.email, p.password FROM person p, inspector i WHERE p.id=i.id");
+        getAllPersons = conn.prepareStatement("SELECT id, name, surname, email, password, admin FROM person");
+        findUserByMail = conn.prepareStatement("SELECT id, name, surname, email, password, admin FROM person WHERE email=?");
     }
 
     private void regenerate() {
@@ -82,5 +85,30 @@ public class InspectorDao {
             e.printStackTrace();
         }
         return lista;
+    }
+
+    public void login(String email, String password) throws IncorrectEmailOrPasswordException {
+        try {
+            findUserByMail.setString(1, email);
+            ResultSet set = findUserByMail.executeQuery();
+            Person person = null;
+            while(set.next()) {
+                boolean admin = false;
+                if(set.getInt(6) >= 1)
+                    admin = true;
+                person = new Person(set.getInt(1), set.getString(2), set.getString(3), set.getString(4), set.getString(5), admin);
+            }
+            if(person == null || !person.getPassword().equals(password)) {
+                throw new IncorrectEmailOrPasswordException("Incorrect email or password.");
+            }
+            loggedUser = person;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    public void logout() {
+        loggedUser = null;
     }
 }

@@ -1,12 +1,19 @@
 package ba.unsa.etf.rpr.Controllers;
 
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.TitledPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
+import javafx.stage.Stage;
 
 import java.io.IOException;
+
+import static javafx.scene.layout.Region.USE_COMPUTED_SIZE;
 
 public class MainPageController {
     public HBox upcomingInspections;
@@ -37,6 +44,22 @@ public class MainPageController {
 //         } catch (IOException e) {
 //             e.printStackTrace();
 //         }
+     }
+
+     public void loginButtonClick(ActionEvent actionEvent) {
+         try {
+             Stage stage = ((Stage) ((Node) actionEvent.getSource()).getScene().getWindow());
+             LogInController logInController = new LogInController();
+             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/fxml/login.fxml"));
+             fxmlLoader.setController(logInController);
+             Parent root = fxmlLoader.load();
+             Scene scene = new Scene(root, stage.getScene().getWidth(), stage.getScene().getHeight());
+             stage.setTitle("Log In");
+             stage.setScene(scene);
+             stage.show();
+         } catch (IOException e) {
+             e.printStackTrace();
+         }
      }
 
 }

@@ -8,7 +8,6 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-
 <VBox alignment="CENTER" fillWidth="false" styleClass="background" stylesheets="@../css/login.css" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <Label text="Welcome" textFill="WHITE">
@@ -16,7 +15,7 @@
             <Font size="36.0" />
          </font>
       </Label>
-      <VBox alignment="CENTER" prefWidth="500.0" spacing="5.0" styleClass="loginWindow" stylesheets="@../css/login.css" VBox.vgrow="NEVER">
+      <VBox fx:id="outerVBox" alignment="CENTER" prefWidth="500.0" spacing="5.0" styleClass="loginWindow" stylesheets="@../css/login.css" VBox.vgrow="NEVER">
          <children>
             <Label fx:id="test" text="Login">
                <font>

@@ -2,15 +2,9 @@ create table if not exists person (
     id int constraint person_pk primary key,
     name TEXT,
     surname TEXT,
-    email TEXT,
-    password TEXT
+    email TEXT constraint unique_email unique,
+    password TEXT,
+    admin int
 );
 
-create table if not exists admin (
-    id int constraint admin_pk primary key,
-);
-
-create table if not exists inspector (
-    id int constraint inspector_pk primary key,
-);
-
+INSERT INTO person VALUES (1, "Admin", "Admin", "admin@admin.com", "password", 1);
