@@ -85,7 +85,7 @@
    <center>
       <VBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" BorderPane.alignment="CENTER">
          <children>
-            <Label text="Good evening">
+            <Label fx:id="welcomeLabel" text="Good evening">
                <font>
                   <Font size="24.0" />
                </font>

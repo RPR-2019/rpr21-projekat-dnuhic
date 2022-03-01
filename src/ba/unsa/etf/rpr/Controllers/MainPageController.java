@@ -6,20 +6,31 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Label;
 import javafx.scene.control.TitledPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 
 import static javafx.scene.layout.Region.USE_COMPUTED_SIZE;
 
 public class MainPageController {
     public HBox upcomingInspections;
+    public Label welcomeLabel;
 
      @FXML
     public void initialize() {
+         LocalTime time = LocalTime.now();
+         if(time.getHour() >= 12 && time.getHour() < 19)
+             welcomeLabel.setText("Good afternoon");
+         else if(time.getHour() > 3 && time.getHour() < 12)
+             welcomeLabel.setText("Good morning");
+         else
+             welcomeLabel.setText("Good evening");
 //         try {
 //             Pane test = FXMLLoader.load(getClass().getResource("/fxml/buildingCard.fxml"));
 //             Pane test1 = FXMLLoader.load(getClass().getResource("/fxml/buildingCard.fxml"));
