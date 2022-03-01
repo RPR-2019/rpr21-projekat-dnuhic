@@ -13,12 +13,12 @@ import java.util.Scanner;
 public class InspectorDao {
     private static InspectorDao instance;
     private Connection conn;
-    private PreparedStatement getAllPersons, findUserByMail, getAllInspectors;
+    private PreparedStatement getAllPersons, findUserByMail, getAllInspectors, getNextId, deletePerson, updatePerson, addNewPerson, idCount, emailCount;
     private Person loggedUser = null;
 
 
     public static InspectorDao getInstance() {
-        if(instance == null) return new InspectorDao();
+        if(instance == null) instance = new InspectorDao();
         return instance;
     }
 
@@ -47,9 +47,15 @@ public class InspectorDao {
     }
 
     private void createQueries() throws SQLException {
-        getAllPersons = conn.prepareStatement("SELECT id, name, surname, email, password, admin FROM person");
-        findUserByMail = conn.prepareStatement("SELECT id, name, surname, email, password, admin FROM person WHERE email=?");
+        getAllPersons = conn.prepareStatement("SELECT id, name, surname, email, password, admin FROM person;");
+        findUserByMail = conn.prepareStatement("SELECT id, name, surname, email, password, admin FROM person WHERE email=?;");
         getAllInspectors = conn.prepareStatement("SELECT * FROM person WHERE admin=0;");
+        getNextId = conn.prepareStatement("SELECT max(id) + 1 FROM person;");
+        deletePerson = conn.prepareStatement("DELETE FROM person WHERE id=?;");
+        updatePerson = conn.prepareStatement("UPDATE person SET name=?, surname=?, email=?, password=?, admin=? WHERE id=?;");
+        addNewPerson = conn.prepareStatement("INSERT INTO person VALUES (?,?,?,?,?,?);");
+        idCount = conn.prepareStatement("SELECT count(*) FROM person WHERE id=?;");
+        emailCount = conn.prepareStatement("SELECT count(*) FROM person WHERE email=?;");
     }
 
     private void regenerate() {
@@ -75,6 +81,44 @@ public class InspectorDao {
         }
     }
 
+    public int checkIfUniqueEmail(String email) {
+        try {
+            emailCount.setString(1, email);
+            ResultSet set = emailCount.executeQuery();
+            if(set.next()) {
+                return set.getInt(1);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return 0;
+    }
+
+    public int checkIfUniqueId(int id) {
+        try {
+            idCount.setInt(1, id);
+            ResultSet set = idCount.executeQuery();
+            if(set.next()) {
+                return set.getInt(1);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return 0;
+    }
+
+    public int getNextId() {
+        try {
+            ResultSet set =  getNextId.executeQuery();
+            if(set.next()) {
+                return set.getInt(1);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return 1;
+    }
+
     public List<Person> getAllInspectors() {
         ArrayList<Person> lista = new ArrayList<Person>();
         try {
@@ -85,8 +129,44 @@ public class InspectorDao {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        System.out.println(lista.size());
         return lista;
+    }
+
+    public void addNewPerson(Person person) {
+        try {
+            addNewPerson.setInt(1, person.getId());
+            addNewPerson.setString(2, person.getName());
+            addNewPerson.setString(3, person.getSurname());
+            addNewPerson.setString(4, person.getEmail());
+            addNewPerson.setString(5, person.getPassword());
+            addNewPerson.setInt(6, person.getAdminInt());
+            addNewPerson.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void deletePerson(Person person) {
+        try {
+            deletePerson.setInt(1, person.getId());
+            deletePerson.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void updatePerson(Person person) {
+        try {
+            updatePerson.setString(1, person.getName());
+            updatePerson.setString(2, person.getSurname());
+            updatePerson.setString(3, person.getEmail());
+            updatePerson.setString(4, person.getPassword());
+            updatePerson.setInt(5, person.getAdminInt());
+            updatePerson.setInt(6, person.getId());
+            updatePerson.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     public Person login(String email, String password) throws IncorrectEmailOrPasswordException {
