@@ -13,7 +13,7 @@ import java.util.Scanner;
 public class InspectorDao {
     private static InspectorDao instance;
     private Connection conn;
-    private PreparedStatement getAllPersons, findUserByMail;
+    private PreparedStatement getAllPersons, findUserByMail, getAllInspectors;
     private Person loggedUser = null;
 
 
@@ -49,6 +49,7 @@ public class InspectorDao {
     private void createQueries() throws SQLException {
         getAllPersons = conn.prepareStatement("SELECT id, name, surname, email, password, admin FROM person");
         findUserByMail = conn.prepareStatement("SELECT id, name, surname, email, password, admin FROM person WHERE email=?");
+        getAllInspectors = conn.prepareStatement("SELECT * FROM person WHERE admin=0;");
     }
 
     private void regenerate() {
@@ -77,7 +78,7 @@ public class InspectorDao {
     public List<Person> getAllInspectors() {
         ArrayList<Person> lista = new ArrayList<Person>();
         try {
-            ResultSet set =  getAllPersons.executeQuery();
+            ResultSet set =  getAllInspectors.executeQuery();
             while(set.next()) {
                 lista.add(new Person(set.getInt(1), set.getString(2), set.getString(3), set.getString(4), set.getString(5)));
             }
@@ -87,7 +88,7 @@ public class InspectorDao {
         return lista;
     }
 
-    public void login(String email, String password) throws IncorrectEmailOrPasswordException {
+    public Person login(String email, String password) throws IncorrectEmailOrPasswordException {
         try {
             findUserByMail.setString(1, email);
             ResultSet set = findUserByMail.executeQuery();
@@ -105,7 +106,7 @@ public class InspectorDao {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-
+        return loggedUser;
     }
 
     public void logout() {
