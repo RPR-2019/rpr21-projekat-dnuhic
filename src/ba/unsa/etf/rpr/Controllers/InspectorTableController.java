@@ -66,6 +66,7 @@ public class InspectorTableController {
                                 person.setEmail(userProfileController.getPerson().getEmail());
                                 person.setPassword(userProfileController.getPerson().getPassword());
                                 person.setAdmin(userProfileController.getPerson().isAdmin());
+                                person.setPicture(userProfileController.getPerson().getPicture());
                                 inspectorDao.updatePerson(userProfileController.getPerson());
                                 inspectorTable.refresh();
                             }

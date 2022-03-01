@@ -8,8 +8,14 @@ import javafx.scene.Node;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.stage.Window;
+
+import java.io.File;
+import java.io.IOException;
 
 public class UserProfileController {
     private Person person;
@@ -20,6 +26,8 @@ public class UserProfileController {
     public TextField fieldPassword;
     public Label errorLabel;
     public CheckBox adminCheck;
+    public ImageView profileImage;
+    public Label nameLabel;
 
     private String idFormat = "^[0-9]+$";
     private String nameSurnameFormat = "^[\\p{L} .'-]+$";
@@ -80,8 +88,12 @@ public class UserProfileController {
             fieldEmail.setText(person.getEmail());
             fieldPassword.setText(person.getPassword());
             adminCheck.setSelected(person.isAdmin());
+            profileImage.setImage(new Image(person.getPicture()));
+            nameLabel.setText(person.getName() + " " + person.getSurname());
         } else {
             fieldId.setText(String.valueOf(inspectorDao.getNextId()));
+            profileImage.setImage(new Image("/images/user-4250.png"));
+            nameLabel.setText("New User");
         }
     }
 
@@ -100,6 +112,8 @@ public class UserProfileController {
                 person = new Person(Integer.parseInt(fieldId.getText()), fieldName.getText(), fieldSurname.getText(), fieldEmail.getText(), fieldPassword.getText());
                 if (adminCheck.isSelected())
                     person.setAdmin(true);
+                System.out.println(profileImage.getImage().getUrl());
+                person.setPicture(profileImage.getImage().getUrl());
             } else {
                 if (inspectorDao.checkIfUniqueEmail(fieldEmail.getText()) > 0) {
                     errorLabel.setText("Email already exists!");
@@ -111,11 +125,33 @@ public class UserProfileController {
                     person = new Person(Integer.parseInt(fieldId.getText()), fieldName.getText(), fieldSurname.getText(), fieldEmail.getText(), fieldPassword.getText());
                     if (adminCheck.isSelected())
                         person.setAdmin(true);
+                    System.out.println(profileImage.getImage().getUrl());
+                    person.setPicture(profileImage.getImage().getUrl());
                 }
             }
             Window window = ((Node) actionEvent.getSource()).getScene().getWindow();
             ((Stage) window).close();
         }
+    }
+
+    public void imageButtonClick(ActionEvent actionEvent) {
+        FileChooser fileChooser = new FileChooser();
+        FileChooser.ExtensionFilter extFilterJPG = new FileChooser.ExtensionFilter("JPG files (*.jpg)", "*.JPG");
+        FileChooser.ExtensionFilter extFilterPNG = new FileChooser.ExtensionFilter("PNG files (*.png)", "*.PNG");
+        FileChooser.ExtensionFilter extFilterBMP = new FileChooser.ExtensionFilter("BMP files (*.bmp)", "*.BMP");
+        FileChooser.ExtensionFilter extFilterGIF = new FileChooser.ExtensionFilter("GIF files (*.gif)", "*.GIF");
+        fileChooser.getExtensionFilters().addAll(extFilterJPG, extFilterPNG, extFilterBMP, extFilterGIF);
+        File file = fileChooser.showOpenDialog(null);
+        if (file != null) {
+            Image image = null;
+            try {
+                image = new Image(file.getCanonicalPath());
+                profileImage.setImage(image);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
     }
 
     public Person getPerson() {

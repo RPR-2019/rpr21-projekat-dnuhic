@@ -13,6 +13,7 @@ public class Person {
     private SimpleStringProperty email;
     private SimpleStringProperty password;
     private SimpleBooleanProperty admin;
+    private String picture;
 
     public Person(int id,String name, String surname, String email, String password, boolean admin) {
         this.id = new SimpleIntegerProperty(id);
@@ -21,6 +22,7 @@ public class Person {
         this.name = new SimpleStringProperty(name);
         this.surname = new SimpleStringProperty(surname);
         this.admin = new SimpleBooleanProperty(admin);
+        picture = "/images/user-4250.png";
     }
 
     public Person(int id, String name, String surname, String email, String password, int admin) {
@@ -33,6 +35,7 @@ public class Person {
             this.admin = new SimpleBooleanProperty(false);
         else
             this.admin = new SimpleBooleanProperty(true);
+        picture = "/images/user-4250.png";
     }
 
     public Person(int id,String name, String surname, String email, String password) {
@@ -41,11 +44,43 @@ public class Person {
         this.password = new SimpleStringProperty(password);
         this.name = new SimpleStringProperty(name);
         this.surname = new SimpleStringProperty(surname);
-        admin = new SimpleBooleanProperty(false);;
+        admin = new SimpleBooleanProperty(false);
+        picture = "/images/user-4250.png";
+    }
+
+    public Person(int id,String name, String surname, String email, String password, String picture) {
+        this.id = new SimpleIntegerProperty(id);
+        this.email = new SimpleStringProperty(email);
+        this.password = new SimpleStringProperty(password);
+        this.name = new SimpleStringProperty(name);
+        this.surname = new SimpleStringProperty(surname);
+        admin = new SimpleBooleanProperty(false);
+        this.picture = picture;
+    }
+
+    public Person(int id, String name, String surname, String email, String password, int admin, String picture) {
+        this.id = new SimpleIntegerProperty(id);
+        this.email = new SimpleStringProperty(email);
+        this.password = new SimpleStringProperty(password);
+        this.name = new SimpleStringProperty(name);
+        this.surname = new SimpleStringProperty(surname);
+        if(admin == 0)
+            this.admin = new SimpleBooleanProperty(false);
+        else
+            this.admin = new SimpleBooleanProperty(true);
+        this.picture = picture;
     }
 
     public int getId() {
         return id.get();
+    }
+
+    public String getPicture() {
+        return picture;
+    }
+
+    public void setPicture(String picture) {
+        this.picture = picture;
     }
 
     public SimpleIntegerProperty idProperty() {

@@ -4,7 +4,8 @@ create table if not exists person (
     surname TEXT,
     email TEXT constraint unique_email unique,
     password TEXT,
-    admin int
+    admin int,
+    picture TEXT
 );
 
-INSERT INTO person VALUES (1, "Admin", "Admin", "admin@admin.com", "password", 1);
+INSERT INTO person VALUES (1, "Admin", "Admin", "admin@admin.com", "password", 1, "/images/user-4250.png");

@@ -6,7 +6,6 @@
 <?import javafx.scene.control.CheckBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TextField?>
-<?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
@@ -40,16 +39,12 @@
       <Label text="Password:" GridPane.columnIndex="2" GridPane.rowIndex="3" />
       <HBox spacing="10.0" GridPane.columnSpan="2147483647">
          <children>
-            <Button mnemonicParsing="false">
+            <Button fx:id="imageButton" mnemonicParsing="false" onAction="#imageButtonClick">
                <graphic>
-                  <ImageView fitHeight="150.0" fitWidth="150.0" pickOnBounds="true" preserveRatio="true">
-                     <image>
-                        <Image url="@../images/user-4250.png" />
-                     </image>
-                  </ImageView>
+                  <ImageView fx:id="profileImage" fitHeight="150.0" fitWidth="150.0" pickOnBounds="true" preserveRatio="true" />
                </graphic>
             </Button>
-            <Label text="Dzenan Nuhic">
+            <Label fx:id="nameLabel" wrapText="true">
                <font>
                   <Font size="28.0" />
                </font>

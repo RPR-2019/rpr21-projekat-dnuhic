@@ -14,6 +14,7 @@ import static com.sun.glass.ui.Window.State.MAXIMIZED;
 import static javafx.scene.layout.Region.USE_COMPUTED_SIZE;
 
 public class Main extends Application {
+
     @Override
     public void start(Stage stage) throws IOException {
         MainPageController mainPageController = new MainPageController();

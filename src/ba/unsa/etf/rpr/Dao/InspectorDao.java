@@ -47,13 +47,13 @@ public class InspectorDao {
     }
 
     private void createQueries() throws SQLException {
-        getAllPersons = conn.prepareStatement("SELECT id, name, surname, email, password, admin FROM person;");
-        findUserByMail = conn.prepareStatement("SELECT id, name, surname, email, password, admin FROM person WHERE email=?;");
+        getAllPersons = conn.prepareStatement("SELECT * FROM person;");
+        findUserByMail = conn.prepareStatement("SELECT * FROM person WHERE email=?;");
         getAllInspectors = conn.prepareStatement("SELECT * FROM person WHERE admin=0;");
         getNextId = conn.prepareStatement("SELECT max(id) + 1 FROM person;");
         deletePerson = conn.prepareStatement("DELETE FROM person WHERE id=?;");
-        updatePerson = conn.prepareStatement("UPDATE person SET name=?, surname=?, email=?, password=?, admin=? WHERE id=?;");
-        addNewPerson = conn.prepareStatement("INSERT INTO person VALUES (?,?,?,?,?,?);");
+        updatePerson = conn.prepareStatement("UPDATE person SET name=?, surname=?, email=?, password=?, admin=?, picture=? WHERE id=?;");
+        addNewPerson = conn.prepareStatement("INSERT INTO person VALUES (?,?,?,?,?,?,?);");
         idCount = conn.prepareStatement("SELECT count(*) FROM person WHERE id=?;");
         emailCount = conn.prepareStatement("SELECT count(*) FROM person WHERE email=?;");
     }
@@ -124,7 +124,9 @@ public class InspectorDao {
         try {
             ResultSet set =  getAllPersons.executeQuery();
             while(set.next()) {
-                lista.add(new Person(set.getInt(1), set.getString(2), set.getString(3), set.getString(4), set.getString(5), set.getInt(6)));
+                lista.add(new Person(set.getInt(1), set.getString(2),
+                        set.getString(3), set.getString(4),
+                        set.getString(5), set.getInt(6), set.getString(7)));
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -140,6 +142,7 @@ public class InspectorDao {
             addNewPerson.setString(4, person.getEmail());
             addNewPerson.setString(5, person.getPassword());
             addNewPerson.setInt(6, person.getAdminInt());
+            addNewPerson.setString(7, person.getPicture());
             addNewPerson.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -162,7 +165,8 @@ public class InspectorDao {
             updatePerson.setString(3, person.getEmail());
             updatePerson.setString(4, person.getPassword());
             updatePerson.setInt(5, person.getAdminInt());
-            updatePerson.setInt(6, person.getId());
+            updatePerson.setString(6, person.getPicture());
+            updatePerson.setInt(7, person.getId());
             updatePerson.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -175,10 +179,8 @@ public class InspectorDao {
             ResultSet set = findUserByMail.executeQuery();
             Person person = null;
             while(set.next()) {
-                boolean admin = false;
-                if(set.getInt(6) >= 1)
-                    admin = true;
-                person = new Person(set.getInt(1), set.getString(2), set.getString(3), set.getString(4), set.getString(5), admin);
+                person = new Person(set.getInt(1), set.getString(2),
+                        set.getString(3), set.getString(4), set.getString(5), set.getInt(6), set.getString(7));
             }
             if(person == null || !person.getPassword().equals(password)) {
                 throw new IncorrectEmailOrPasswordException("Incorrect email or password.");
